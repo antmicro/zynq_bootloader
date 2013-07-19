@@ -1,0 +1,7 @@
+zbin is a simple tool to create a minimal loadable Zynq image with just a bootloader.
+
+to compile:
+gcc zbin.c -o zbin
+
+usage:
+zbin /path/to/bootloader/binary /path/to/output/file
