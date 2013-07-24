@@ -52,6 +52,8 @@ long fsize(char *fname) {
 	return size;
 }
 
+#define BIN_START 0xac0
+
 int main(int argc, char *argv[]) {
 	if (argc != 3) {
 		printf("Zynq .bin file generator\n");
@@ -61,16 +63,20 @@ int main(int argc, char *argv[]) {
 	}
 	uint32_t fs = fsize(argv[1]);
 	if (fs == 0) {
-		printf("Error: file %s does not exists or its size equals to 0", argv[1]);
+		printf("Error: file %s does not exists or its size equals to 0\n", argv[1]);
 		exit(-1);
 	}
+        if (fs > 0x30000) {
+                printf("Error: binary cannot be greater than 0x30000.\n");
+                exit(-1);
+        }
         binhdr hdr;
         memset(&hdr, 0x0, sizeof(binhdr));
         hdr.magic1 = 0xaa995566;
         hdr.magic2 = 0x584c4e58;
         hdr.magic3 = 0x01010000;
         hdr.magic4 = 0x00000001;
-        hdr.bootloader_addr = 0xac0;
+        hdr.bootloader_addr = BIN_START;
         hdr.bootloader_len = fs;
         hdr.bootloader_len2 = hdr.bootloader_len;
         uint32_t *data = (uint32_t*)&hdr;
@@ -79,6 +85,10 @@ int main(int argc, char *argv[]) {
         hdr.crcsum = ~hdr.crcsum;
 
         FILE *f = fopen(argv[2], "w");
+        if (f == NULL) {
+                printf("Error creating file '%s'.\n", argv[2]);
+                exit(-1);
+        }
         // insert start sequence
         uint32_t magic = 0xeafffffe;
         for (i = 0; i < 8; i++) fwrite((char*)&magic,1,4,f);
