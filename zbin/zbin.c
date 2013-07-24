@@ -67,6 +67,7 @@ int main(int argc, char *argv[]) {
 		exit(-1);
 	}
         if (fs > 0x30000) {
+                // Zynq rom bootloader is only able to copy 192 kB of data to OCM.
                 printf("Error: binary cannot be greater than 0x30000.\n");
                 exit(-1);
         }

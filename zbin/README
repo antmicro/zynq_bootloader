@@ -5,3 +5,5 @@ gcc zbin.c -o zbin
 
 usage:
 zbin /path/to/bootloader/binary /path/to/output/file
+
+note that Zynq cannot copy to OCM more than 192 kB of data.
