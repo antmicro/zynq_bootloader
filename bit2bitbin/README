@@ -1,0 +1,7 @@
+bit2bitbin is a simple tool to convert .bit to .bit.bin file. This file can later be used for Zynq U-Boot.
+
+to compile:
+gcc bit2bitbin.c -o bit2bitbin
+
+usage:
+bit2bitbin /path/to/bitstream /path/to/output/raw/bitstream
